@@ -13,7 +13,8 @@ namespace FileSieve.Windows;
 public class MainWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
-
+    private ImGuiTextFilter _filter = new ImGuiTextFilter();
+    
     // We give this window a hidden ID using ##.
     // The user will see "My Amazing Window" as window title,
     // but for ImGui the ID is "My Amazing Window##With a hidden ID"
@@ -36,9 +37,9 @@ public class MainWindow : Window, IDisposable
     {
         ImGui.Text($"The random config bool is {plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
 
-        if (ImGui.Button("Show Settings"))
+        if (ImGui.Button("Refresh List"))
         {
-            plugin.ToggleConfigUi();
+            PathListManager.GetPathList();
         }
 
         ImGui.Spacing();
@@ -52,6 +53,26 @@ public class MainWindow : Window, IDisposable
             if (child.Success)
             {
                 ImGui.Text(DebuggerCheck.IsDebuggerAttached() ? "Debugger Attached" : "no Debugger Attached :(");
+
+                _filter.Draw();
+                
+                foreach (var i in PathListManager.Files)
+                {
+                    if(_filter.PassFilter(i.Path))
+                    {
+                        if (ImGui.Selectable(i.Path))
+                        {
+                            if (plugin.Detours.Watching.Contains(i))
+                            {
+                                plugin.Detours.Watching.Remove(i);
+                            }
+                            else
+                            {
+                                plugin.Detours.Watching.Add(i);
+                            }
+                        }
+                    }
+                }
 
                 ImGuiHelpers.ScaledDummy(20.0f);
 

@@ -17,6 +17,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static IGameInteropProvider InteropProvider { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     
     internal static PeSigScanner SigScanner { get; private set; }
@@ -28,6 +29,7 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("FileSieve");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    public GetResourceDetours Detours;
 
     public Plugin()
     {
@@ -35,6 +37,8 @@ public sealed class Plugin : IDalamudPlugin
 
         SigScanner = new PeSigScanner();
         PathListManager.GetPathList();
+        Detours = new GetResourceDetours();
+        
         
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);
