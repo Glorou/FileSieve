@@ -51,11 +51,7 @@ public class MainWindow : Window, IDisposable
             // Check if this child is drawing
             if (child.Success)
             {
-                
-                if(Debugger.IsAttached)
-                    ImGui.Text("Debugger Attached");
-                else
-                    ImGui.Text("no Debugger Attached :(");
+                ImGui.Text(DebuggerCheck.IsDebuggerAttached() ? "Debugger Attached" : "no Debugger Attached :(");
 
                 ImGuiHelpers.ScaledDummy(20.0f);
 

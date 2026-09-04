@@ -34,8 +34,8 @@ public sealed class Plugin : IDalamudPlugin
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         SigScanner = new PeSigScanner();
-        // You might normally want to embed resources and load them from the manifest stream
-
+        PathListManager.GetPathList();
+        
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);
 
